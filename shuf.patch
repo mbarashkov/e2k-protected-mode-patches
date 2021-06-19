@@ -1,0 +1,24 @@
+From 404aecb82c37bf05cf04da5b64863c2688636b0a Mon Sep 17 00:00:00 2001
+From: Mikhail Barashkov <gnu@mbarashkov.email>
+Date: Sat, 19 Jun 2021 14:32:01 +0300
+Subject: [PATCH] shuf: fix crash in E2k Protected mode
+
+* unitialized data was used
+---
+ gl/lib/randread.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/gl/lib/randread.c b/gl/lib/randread.c
+index 7124e3df0..8e6b1c5b8 100644
+--- a/gl/lib/randread.c
++++ b/gl/lib/randread.c
+@@ -132,6 +132,7 @@ static struct randread_source *
+ simple_new (FILE *source, void const *handler_arg)
+ {
+   struct randread_source *s = xmalloc (sizeof *s);
++  memset(s, 0, sizeof *s);
+   s->source = source;
+   s->handler = randread_error;
+   s->handler_arg = handler_arg;
+--
+2.28.0
