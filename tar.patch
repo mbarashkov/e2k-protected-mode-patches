@@ -1,0 +1,15 @@
+--- a/src/buffer.c
++++ b/src/buffer.c
+@@ -1892,6 +1892,12 @@ _gnu_flush_read (void)
+   for (;;)
+     {
+       status = rmtread (archive, record_start->buffer, record_size);
++      if(status < record_size) 
++        {
++          //We didn't read the entire buffer, so we need to fill it with zeroes
++          size_t unreadSize = record_size - status;
++          memset(record_start->buffer + status, 0, unreadSize);
++        }
+       if (status == record_size)
+         {
+           records_read++;
